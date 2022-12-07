@@ -104,7 +104,9 @@ with torch.no_grad():
             utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(original_img))
             utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(blurred_img))
             utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
-
+            
+        if(ii % 50 == 0 and ii != 0):
+            break
 psnr = sum(psnr_val_rgb) / len(data)
 print("PSNR: %f" % psnr)
 
