@@ -9,6 +9,8 @@ def torchPSNR(tar_img, prd_img):
     return ps
 
 def save_img(filepath, img):
+    if type(img)!=np.ndarray:
+        img = np.asarray(img)
     cv2.imwrite(filepath,cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 
 def numpyPSNR(tar_img, prd_img):
