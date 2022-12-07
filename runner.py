@@ -90,11 +90,16 @@ with torch.no_grad():
         for batch in range(len(restored)):
             restored_img = restored[batch]
             restored_img = img_as_ubyte(restored_img)
-            print("restored_img", restored_img.shape)
+
+            original_img = gt[batch]
+            blurred_img = input_[batch]
+            print("restore", restored_img.shape)   # (400, 400, 3)
+            print("original", restored_img.shape)  #
+            print("blurred", restored_img.shape)   # 
             
-            restored_img = Image.fromarray(restored_img)
-            original_img = Image.fromarray(gt[batch])
-            blurred_img = Image.fromarray(input_[batch])
+            restored_img = topil(restored_img)
+            original_img = topil(original_img)
+            blurred_img = topil(blurred_img)
 
             # original_img = img_as_ubyte(original_img)
             # blurred_img = img_as_ubyte(blurred_img)
