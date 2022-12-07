@@ -90,12 +90,9 @@ with torch.no_grad():
         for batch in range(len(restored)):
             restored_img = restored[batch]
             restored_img = img_as_ubyte(restored_img)
+            restored_img = torch.tensor(restored_img)
             original_img = gt[batch]
             blurred_img = input_[batch]
-
-            restored_img = topil(restored_img)
-            original_img = topil(original_img)
-            blurred_img = topil(blurred_img)
 
             print("restored", restored_img)   # (400, 400, 3)
             print("original", original_img)   # torch.Size([3, 400, 400])
@@ -105,9 +102,6 @@ with torch.no_grad():
             # original_img = img_as_ubyte(original_img)
             # blurred_img = img_as_ubyte(blurred_img)
 
-            utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), original_img)
-            utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), blurred_img)
-            utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), restored_img)
             # try:
             #     psnr = psnr_loss(restored_img, gt[batch])
             #     print("sklean psnr", psnr)
@@ -116,12 +110,16 @@ with torch.no_grad():
             #     print("sklearn psnr failed")
             #     pass
             # try:
-            psnr = float(utils.torchPSNR(restored_img, gt[batch]).cpu().detach().numpy())
+            psnr = float(utils.torchPSNR(restored_img, original_img).cpu().detach().numpy())
             print("torch psnr", psnr)
             psnr_val_rgb.append(psnr)
             # except:
             #     print("torch psnr failed")
             #     pass
+
+            utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(original_img))
+            utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(blurred_img))
+            utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
 
 psnr = sum(psnr_val_rgb) / len(data)
 print("PSNR: %f" % psnr)
