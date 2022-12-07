@@ -90,7 +90,7 @@ with torch.no_grad():
         for batch in range(len(restored)):
             restored_img = restored[batch]
             restored_img = img_as_ubyte(restored_img)
-            print("restored_img", restored_img)
+            print("restored_img", restored_img.shape)
             
             restored_img = Image.fromarray(restored_img)
             original_img = Image.fromarray(gt[batch])
