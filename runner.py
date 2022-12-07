@@ -45,6 +45,9 @@ from customDataSet import CustomDataset
 
 data = CustomDataset(doc_dir,(400,400),False)
 dataloader = DataLoader(dataset=data, batch_size=1, shuffle=False, num_workers=0, drop_last=False, pin_memory=True)
+print(data)
+print(dataloader)
+# %%
 original_dir = os.path.join(result_dir,"original")
 blurred_dir = os.path.join(result_dir,"blurred")
 restored_dir = os.path.join(result_dir,"restored")
