@@ -2,6 +2,7 @@ import os
 import pickle
 from tqdm import tqdm
 
+from PIL import Image
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
