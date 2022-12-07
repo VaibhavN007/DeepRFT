@@ -107,7 +107,7 @@ with torch.no_grad():
             
         if(ii % 50 == 0 and ii != 0):
             break
-psnr = sum(psnr_val_rgb) / len(data)
+psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
 print("PSNR: %f" % psnr)
 
 with open("PSNRs.pkl","wb") as f:
