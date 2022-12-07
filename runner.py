@@ -23,7 +23,7 @@ win = 256           # window size, [GoPro, HIDE, RealBlur]=256, [DPDD]=512
 gpus = 0            # CUDA_VISIBLE_DEVICES
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = gpus
+os.environ["CUDA_VISIBLE_DEVICES"] = str(gpus)
 
 # %%
 
