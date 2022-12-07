@@ -93,9 +93,9 @@ with torch.no_grad():
 
             original_img = gt[batch]
             blurred_img = input_[batch]
-            print("restore", restored_img.shape)   # (400, 400, 3)
-            print("original", restored_img.shape)  #
-            print("blurred", restored_img.shape)   # 
+            print("restored", restored_img.shape)   # (400, 400, 3)
+            print("original", original_img.shape)   #
+            print("blurred", blurred_img.shape)     # 
             
             restored_img = topil(restored_img)
             original_img = topil(original_img)
