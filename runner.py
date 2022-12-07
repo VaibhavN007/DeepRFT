@@ -87,9 +87,20 @@ with torch.no_grad():
             utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
             utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(gt[batch]))
             utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(input_[batch]))
-            
-            psnr_val_rgb.append(psnr_loss(restored_img, gt[batch]))
-            # psnr_val_rgb.append(float(utils.torchPSNR(restored_img, gt[batch]).cpu().detach().numpy()))
+            try:
+                psnr = psnr_loss(restored_img, gt[batch])
+                print("sklean psnr", psnr)
+                psnr_val_rgb.append(psnr)
+            except:
+                print("sklearn psnr failed")
+                pass
+            try:
+                psnr = float(utils.torchPSNR(restored_img, gt[batch]).cpu().detach().numpy())
+                print("torch psnr", psnr)
+                psnr_val_rgb.append(psnr)
+            except:
+                print("torch psnr failed")
+                pass
 
 psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
 print("PSNR: %f" % psnr)
