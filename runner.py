@@ -90,15 +90,16 @@ with torch.no_grad():
             restored_img = restored[batch]
             restored_img = img_as_ubyte(restored_img)
             
-            original_img = gt[batch]
-            blurred_img = input_[batch]
+            original_img = gt[batch].astype('uint8')
+            blurred_img = input_[batch].astype('uint8')
 
             # original_img = img_as_ubyte(original_img)
             # blurred_img = img_as_ubyte(blurred_img)
+            print("restored_img", restored_img)
 
+            utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(original_img))
+            utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(blurred_img))
             utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
-            utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(original_img.astype('uint8')))
-            utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(blurred_img.astype('uint8')))
             try:
                 psnr = psnr_loss(restored_img, gt[batch])
                 print("sklean psnr", psnr)
