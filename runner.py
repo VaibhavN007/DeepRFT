@@ -11,6 +11,7 @@ import utils
 from layers import *
 from DeepRFT_MIMO import DeepRFT as mynet
 from get_parameter_number import get_parameter_number
+from skimage.metrics import peak_signal_noise_ratio as psnr_loss
 
 # %%
 
@@ -87,8 +88,8 @@ with torch.no_grad():
             utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(gt[batch]))
             utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(input_[batch]))
             
-            # psnr_val_rgb.append(psnr_loss(restored_img, gt[batch]))
-            psnr_val_rgb.append(float(utils.torchPSNR(restored_img, gt[batch]).cpu().detach().numpy()))
+            psnr_val_rgb.append(psnr_loss(restored_img, gt[batch]))
+            # psnr_val_rgb.append(float(utils.torchPSNR(restored_img, gt[batch]).cpu().detach().numpy()))
 
 psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
 print("PSNR: %f" % psnr)
