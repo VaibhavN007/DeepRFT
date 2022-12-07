@@ -76,7 +76,7 @@ with torch.no_grad():
         gt          = data_test[1].cpu().detach()
         filenames   = data_test[2]
 
-        print(input_.shape, gt.shape, len(filenames))
+        # print(input_.shape, gt.shape, len(filenames))   # torch.Size([1, 3, 400, 400]) torch.Size([1, 3, 400, 400]) 1
         
         _, _, Hx, Wx = input_.shape
         input_re, batch_list = window_partitionx(input_, win)
@@ -88,14 +88,16 @@ with torch.no_grad():
 
         for batch in range(len(restored)):
             restored_img = restored[batch]
-            restored_img = img_as_ubyte(restored[batch])
+            original_img = gt[batch]
+            blurred_img = input_[batch]
 
-            original_img = img_as_ubyte(gt[batch])
-            blurred_img = img_as_ubyte(input_[batch])
+            # restored_img = img_as_ubyte(restored_img)
+            # original_img = img_as_ubyte(original_img)
+            # blurred_img = img_as_ubyte(blurred_img)
 
             utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
-            utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(gt[batch]))
-            utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(input_[batch]))
+            utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(original_img))
+            utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), topil(blurred_img))
             try:
                 psnr = psnr_loss(restored_img, gt[batch])
                 print("sklean psnr", psnr)
