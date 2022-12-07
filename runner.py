@@ -16,7 +16,7 @@ from get_parameter_number import get_parameter_number
 
 doc_dir = "./publaynet/"
 result_dir = "./results/"
-weights = "./DeepRFT-MIMO-v1/DeepRFT_Small/model_GoPro.pth"
+weights = "./DeepRFT-MIMO-v1/DeepRFT/model_GoPro.pth"
 
 num_res = 8         # num of resblocks, [Small, Med, PLus]=[4, 8, 20]
 win = 256           # window size, [GoPro, HIDE, RealBlur]=256, [DPDD]=512
@@ -90,7 +90,7 @@ with torch.no_grad():
             # psnr_val_rgb.append(psnr_loss(restored_img, gt[batch]))
             psnr_val_rgb.append(float(utils.torchPSNR(restored_img, gt[batch]).cpu().detach().numpy()))
 
-psnr = sum(psnr_val_rgb) / len(data)
+psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
 print("PSNR: %f" % psnr)
 
 with open("PSNRs.pkl","wb") as f:
