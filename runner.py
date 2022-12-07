@@ -71,6 +71,9 @@ with torch.no_grad():
         input_      = data_test[0].cuda()
         gt          = data_test[1].cpu().detach()
         filenames   = data_test[2]
+
+        print(input_, gt, filenames)
+        print(input_.shape, gt.shape, len(filenames))
         
         _, _, Hx, Wx = input_.shape
         input_re, batch_list = window_partitionx(input_, win)
@@ -82,7 +85,7 @@ with torch.no_grad():
 
         for batch in range(len(restored)):
             restored_img = restored[batch]
-            restored_img = img_as_ubyte(restored[batch])
+            # restored_img = img_as_ubyte(restored[batch])
 
             utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
             utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(gt[batch]))
@@ -102,8 +105,8 @@ with torch.no_grad():
                 print("torch psnr failed")
                 pass
 
-psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
-print("PSNR: %f" % psnr)
+# psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
+# print("PSNR: %f" % psnr)
 
 with open("PSNRs.pkl","wb") as f:
     pickle.dump(psnr_val_rgb,f)
