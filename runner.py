@@ -11,6 +11,8 @@ import utils
 from layers import *
 from DeepRFT_MIMO import DeepRFT as mynet
 from get_parameter_number import get_parameter_number
+
+from skimage import img_as_ubyte
 from skimage.metrics import peak_signal_noise_ratio as psnr_loss
 
 # %%
@@ -45,8 +47,7 @@ from customDataSet import CustomDataset
 
 data = CustomDataset(doc_dir,(400,400),False)
 dataloader = DataLoader(dataset=data, batch_size=1, shuffle=False, num_workers=0, drop_last=False, pin_memory=True)
-print(data)
-print(dataloader)
+
 # %%
 original_dir = os.path.join(result_dir,"original")
 blurred_dir = os.path.join(result_dir,"blurred")
@@ -88,7 +89,10 @@ with torch.no_grad():
 
         for batch in range(len(restored)):
             restored_img = restored[batch]
-            # restored_img = img_as_ubyte(restored[batch])
+            restored_img = img_as_ubyte(restored[batch])
+
+            original_img = img_as_ubyte(gt[batch])
+            blurred_img = img_as_ubyte(input_[batch])
 
             utils.save_img((os.path.join(restored_dir, filenames[batch]+'.png')), topil(restored_img))
             utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), topil(gt[batch]))
@@ -108,8 +112,8 @@ with torch.no_grad():
                 print("torch psnr failed")
                 pass
 
-# psnr = sum(psnr_val_rgb) / len(psnr_val_rgb)
-# print("PSNR: %f" % psnr)
+psnr = sum(psnr_val_rgb) / len(data)
+print("PSNR: %f" % psnr)
 
 with open("PSNRs.pkl","wb") as f:
     pickle.dump(psnr_val_rgb,f)
