@@ -85,13 +85,12 @@ with torch.no_grad():
         restored = window_reversex(restored, win, Hx, Wx, batch_list)
 
         restored = torch.clamp(restored, 0, 1)
-        restored = restored.permute(0, 2, 3, 1).cpu().detach().numpy()
+        restored = restored.cpu().detach().numpy()
 
         for batch in range(len(restored)):
             restored_img = restored[batch]
             restored_img = img_as_ubyte(restored_img)
             restored_img = torch.tensor(restored_img)
-            restored_img = restored_img.permute(2, 1, 0)
 
             original_img = gt[batch]
             blurred_img = input_[batch]
