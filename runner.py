@@ -94,9 +94,9 @@ with torch.no_grad():
             original_img = gt[batch]
             blurred_img = input_[batch]
 
-            print("restored", restored_img)   # (400, 400, 3)
-            print("original", original_img)   # torch.Size([3, 400, 400])
-            print("blurred", blurred_img)     # torch.Size([3, 400, 400])
+            print("restored", restored_img.shape)   # (400, 400, 3)
+            print("original", original_img.shape)   # torch.Size([3, 400, 400])
+            print("blurred", blurred_img.shape)     # torch.Size([3, 400, 400])
             
 
             # original_img = img_as_ubyte(original_img)
