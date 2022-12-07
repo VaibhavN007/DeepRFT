@@ -89,6 +89,7 @@ with torch.no_grad():
         for batch in range(len(restored)):
             restored_img = restored[batch]
             restored_img = img_as_ubyte(restored_img)
+            print("restored_img", restored_img)
             
             restored_img = Image.fromarray(restored_img)
             original_img = Image.fromarray(gt[batch])
@@ -96,7 +97,6 @@ with torch.no_grad():
 
             # original_img = img_as_ubyte(original_img)
             # blurred_img = img_as_ubyte(blurred_img)
-            print("restored_img", restored_img)
 
             utils.save_img((os.path.join(original_dir, filenames[batch]+'.png')), original_img)
             utils.save_img((os.path.join(blurred_dir, filenames[batch]+'.png')), blurred_img)
