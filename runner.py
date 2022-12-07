@@ -76,7 +76,6 @@ with torch.no_grad():
         gt          = data_test[1].cpu().detach()
         filenames   = data_test[2]
 
-        print(input_, gt, filenames)
         print(input_.shape, gt.shape, len(filenames))
         
         _, _, Hx, Wx = input_.shape
