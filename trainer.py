@@ -150,7 +150,7 @@ for epoch in range(start_epoch, num_epochs + 1):
         optimizer.step()
         epoch_loss +=loss.item()
         if i%num_tb_samples == 0:
-            writer.add_scalar("data/training_loss", loss.val, (epoch-1) * tb_epochs + (i//num_tb_samples))
+            writer.add_scalar("data/training_loss", loss.item(), (epoch-1) * tb_epochs + (i//num_tb_samples))
         
         # iter += 1
         # writer.add_scalar('loss/fft_loss', loss_fft, iter)
