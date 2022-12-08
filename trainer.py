@@ -63,6 +63,11 @@ num_epochs = 2
 batch_size = 16
 val_epochs = 20
 
+start_epoch = 1
+
+start_lr = 2e-4
+end_lr = 1e-6
+
 # %%
 ######### Model ###########
 model_restoration = myNet()
@@ -76,9 +81,34 @@ device_ids = [i for i in range(torch.cuda.device_count())]
 if torch.cuda.device_count() > 1:
   print("\n\nLet's use", torch.cuda.device_count(), "GPUs!\n\n")
 
+optimizer = optim.Adam(model_restoration.parameters(), lr=start_lr, betas=(0.9, 0.999), eps=1e-8)
+
 # %%
-weights_ = "./DeepRFT-MIMO-v1/DeepRFT/model_GoPro.pth"
-utils.load_checkpoint(model_restoration, weights_)
+######### Scheduler ###########
+warmup_epochs = 3
+scheduler_cosine = optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs-warmup_epochs, eta_min=end_lr)
+scheduler = GradualWarmupScheduler(optimizer, multiplier=1, total_epoch=warmup_epochs, after_scheduler=scheduler_cosine)
+
+# %%
+######### Resume ###########
+
+RESUME = True
+
+if RESUME:
+    path_chk_rest = utils.get_last_path(model_dir, '_latest.pth')
+    utils.load_checkpoint(model_restoration,path_chk_rest)
+    start_epoch = utils.load_start_epoch(path_chk_rest) + 1
+    utils.load_optim(optimizer, path_chk_rest)
+
+    for i in range(1, start_epoch):
+        scheduler.step()
+    new_lr = scheduler.get_lr()[0]
+    print('------------------------------------------------------------------------------')
+    print("==> Resuming Training with learning rate:", new_lr)
+    print('------------------------------------------------------------------------------')
+else:
+    weights_ = "./DeepRFT-MIMO-v1/DeepRFT/model_GoPro.pth"
+    utils.load_checkpoint(model_restoration, weights_)
 
 # %%
 
@@ -97,7 +127,6 @@ val_dataset = CustomDataset(doc_dir, output_dim=(256,256), filter=False, type="v
 val_loader = DataLoader(dataset=val_dataset, batch_size=1, shuffle=True, num_workers=2, drop_last=False, pin_memory=True)
 len_valdataset = len(val_dataset)
 # %%
-start_epoch = 1
 
 num_samples_per_epoch = 1000
 num_val_samples = 400
@@ -109,15 +138,10 @@ num_epochs = actual_epochs*data_epochs
 
 num_tb_samples = 100
 tb_epochs = len_dataset//num_tb_samples
+
 # %%
-new_lr = 2e-4
-optimizer = optim.Adam(model_restoration.parameters(), lr=new_lr, betas=(0.9, 0.999), eps=1e-8)
-# %%
-warmup_epochs = 3
-scheduler_cosine = optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs-warmup_epochs, eta_min=1e-6)
-scheduler = GradualWarmupScheduler(optimizer, multiplier=1, total_epoch=warmup_epochs, after_scheduler=scheduler_cosine)
-scheduler.step()
-# %%
+print('===> Start Epoch {} End Epoch {}'.format(start_epoch, num_epochs + 1))
+
 best_psnr = 0
 best_epoch = 0
 writer = SummaryWriter(log_dir)
