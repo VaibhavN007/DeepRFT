@@ -20,9 +20,9 @@ class CameraDataset(Dataset):
         self.data = glob.glob(os.path.join(document_dir,"*.jpg")) ##Contents inside Path
         print('size', len(self.data))
 
-        self.transforms = TF.RandomResizedCrop(size=self.img_dim,scale=(0.1,0.2),ratio=(0.5,2),interpolation=interpolation)
-
         self.img_dim = output_dim
+        self.transforms = TF.RandomResizedCrop(size=self.img_dim,scale=(0.1,0.2),ratio=(0.5,2),interpolation=interpolation)
+        
         self.totensor = TF.ToTensor()
     
     def __len__(self):   ##Mandatory override criteria
