@@ -51,7 +51,12 @@ dataloader = DataLoader(dataset=data, batch_size=1, shuffle=False, drop_last=Fal
 
 # %%
 
+input_dir = os.path.join(result_dir,"input")
+output_dir = os.path.join(result_dir,"output")
+
 utils.mkdir(result_dir)
+utils.mkdir(input_dir)
+utils.mkdir(output_dir)
 
 # %%
 
@@ -81,4 +86,5 @@ with torch.no_grad():
             restored_img = torch.tensor(restored_img)
 
             blurred_img = input_[batch]
-            utils.save_img((os.path.join(result_dir, filenames[batch]+'.png')), topil(restored_img))
+            utils.save_img((os.path.join(output_dir, filenames[batch]+'.png')), topil(restored_img))
+            utils.save_img((os.path.join(input_dir, filenames[batch]+'.png')), topil(blurred_img))

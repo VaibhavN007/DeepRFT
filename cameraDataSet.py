@@ -20,6 +20,8 @@ class CameraDataset(Dataset):
         self.data = glob.glob(os.path.join(document_dir,"*.jpg")) ##Contents inside Path
         print('size', len(self.data))
 
+        self.transforms = TF.RandomResizedCrop(size=self.img_dim,scale=(0.1,0.2),ratio=(0.5,2),interpolation=interpolation)
+
         self.img_dim = output_dim
         self.totensor = TF.ToTensor()
     
@@ -29,6 +31,7 @@ class CameraDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.data[idx]   
         img = Image.open(img_path)
+        img = self.transforms(img)
         img = self.totensor(img)
         return img, os.path.splitext(os.path.split(img_path)[-1])[0]
 
